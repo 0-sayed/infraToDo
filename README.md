@@ -1,29 +1,21 @@
-Overview
+# Overview
+
 This project is a simple Todo App that allows users to manage their tasks. It encompasses both front-end and back-end components, utilizing various technologies for development.
 
-Features
-Add Todo
-Implement a form using React Hook Form to add new todos.
-Utilize Axios for sending requests to the back end to store new todos.
-Delete Todo
-Allow users to delete a specific todo.
-Utilize React Query to send mutation requests to the server for deleting the corresponding todo.
-List Todos
-Display a list of todos on the front end.
-Fetch todos from the server using React Query.
-Edit Todo
-Enable users to edit the details of an existing todo.
-Utilize React Query to send mutation requests to the server for updating the todo.
-Change Todo Status
-Implement functionality to mark a todo as completed or change its status.
-Utilize React Query to send mutation requests to the server for updating the todo status.
-Technologies Used
-Front-end: React, React Hook Form, React Query, Tailwind CSS
-Back-end: Node.js
-HTTP requests: Axios
+https://github.com/0-sayed/infraToDo/assets/159628950/6cabafd5-70e9-4702-9098-366927394402
 
-	installation
-	- clone
-	- make .env file like .evn.temp
-	- npm install (for backend and also for frontend)
-	- npm run dev
+# Features
+- Add Todo
+- Delete Todo
+- List Todos
+- Edit Todo
+- Change Todo Status
+
+## Technologies Used
+- Front-end: React, React Hook Form, React Query, Tailwind CSS, Axios
+- Back-end: Node.js
+
+## installation
+- create .env file like .evn.temp provided file
+- npm install (for backend and also for frontend)
+- npm run dev
