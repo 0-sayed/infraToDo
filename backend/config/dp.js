@@ -4,7 +4,7 @@ const connectToDb = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
   } catch (error) {
-    console.log(error.message);
+    throw new Error(`Error updating post: ${error.message}`);
   }
 };
 export default connectToDb;

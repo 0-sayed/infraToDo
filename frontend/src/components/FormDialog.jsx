@@ -11,11 +11,10 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 	let priority = null;
   let dueTo = new Date().toISOString().split('T')[0];
 	if(Object.getOwnPropertyNames(editData).length !== 0){
-			console.log(editData)
 			tittle = editData.tittle;
 			description = editData.description;
 			priority = editData.priority;
-			dueTo = editData.dueTo;
+			dueTo = editData.dueTo.split('T')[0];
 	}
   const cancelButtonRef = useRef(null)
 
@@ -23,53 +22,53 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-	async function submitPost(data) {
+	async function postTaskAPI(data) {
 		try {
 			const response = await axios.post('/api/task', data);
 			return response.data; 
 		} catch (error) {
-			throw new Error(`Error submitting post: ${error.message}`);
+			throw new Error(`Error submitting task: ${error.message}`);
 		}
 	}
+	const { mutate:postTaskMutation, isLoading:postLoading, isError:postError } = useMutation(postTaskAPI, {
+    onSuccess: () => {
+			toggleForm(); 	
+    },
+    onError: (err) => {
+    },
+  });
 
-	async function updatePost(data) {
+	async function updateTaskAPI(data) {
 		try {
 			const response = await axios.patch('/api/task', data);
 			return response.data; 
 		} catch (error) {
-			throw new Error(`Error submitting post: ${error.message}`);
+			throw new Error(`Error updating post: ${error.message}`);
 		}
 	}
-
-	const { mutate } = useMutation(async (data) => {
-		if(Object.getOwnPropertyNames(editData).length !== 0){
-			const {_id} = editData
-			console.log({_id, ...data})
-			await updatePost({_id, ...data});
-		}
-		else
-			await submitPost(data) 
-	}, {
+	const { mutate:updateTaskMutation, isLoading:updateLoading, isError:updateError } = useMutation(updateTaskAPI, {
     onSuccess: () => {
-      setError(null);
-			reset();
-			toggleForm();
+			toggleForm(); 	
     },
     onError: (err) => {
-      setError(err.message);
     },
   });
 
-  const onSubmit =  async (data) => {
-	
+  const onSubmit = (data) => {
 		try {
 			setIsLoading(true);
-			mutate(data)
+      setError(null);
+			if(Object.getOwnPropertyNames(editData).length !== 0){
+				const {_id} = editData
+				updateTaskMutation({_id, ...data});
+			}
+			else
+				postTaskMutation(data) 
+	
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting :', error);
       setError(error.message);
     } finally {
-			
       setIsLoading(false);
     }
   };
@@ -180,7 +179,6 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 
 											</div>
 										</div>
-
 									</div>
 
 									<div className="flex items-center justify-center space-x-4 mb-8">
@@ -195,14 +193,13 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 										<button
 											type="submit"
 											className="flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-											disabled={isLoading}
+											disabled={updateLoading||postLoading}
 										>
-											{isLoading ? <Loader /> : 'Done!'}
+											{updateLoading||postLoading ? <Loader /> : 'Done!'}
 										</button>
 									</div>
 									{error && <p className="error-message">{error}</p>}
 								</form>
-
 
               </Dialog.Panel>
             </Transition.Child>
