@@ -21,6 +21,7 @@ const router = createBrowserRouter(
   )
 )
 const root = ReactDOM.createRoot(document.getElementById('root'));
+console.log("clean browser console without any errors :)");
 root.render(
   <React.StrictMode>
 	 <QueryClientProvider client={queryClient}>

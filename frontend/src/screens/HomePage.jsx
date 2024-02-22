@@ -16,7 +16,7 @@ const HomePage = () => {
 		setEditData(data)
 	}
   return (
-		<div class="max-w-4xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+		<div className="max-w-4xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
 			<button 
 				type="button" 
 				className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 border border-indigo-700 rounded"

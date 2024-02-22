@@ -82,7 +82,7 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
     <ul className="divide-y divide-gray-100 mt-3">
       {
 				fetchingLoading ? <Loader/> : fetchingError ? <p className='error-message bg-red-500 text-white px-4 py-3 rounded-md flex items-center justify-center'>error while fetching</p> :
-				tasks.length === 0 ? <div class="flex justify-center gap-x-6 py-5 bg-gray-100 text-gray-500 text-center text-xl font-bold rounded-md">Kick start your day & add some tasks</div> :
+				tasks.length === 0 ? <div className="flex justify-center gap-x-6 py-5 bg-gray-100 text-gray-500 text-center text-xl font-bold rounded-md">Kick start your day & add some tasks</div> :
 				tasks.map((task) => (
 					<li 
 						key={task._id}
@@ -118,7 +118,7 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 						</div>
 						{
 							hoveredItems[task._id]  && (
-								<div class="hidden shrink-0 sm:flex sm:flex-row sm:items-center ">
+								<div className="hidden shrink-0 sm:flex sm:flex-row sm:items-center ">
 									<PencilSquareIcon 
 										onClick={()=>toggleFormWithData(task)}
 										className="h-6 w-6 mr-2 text-gray-500  cursor-pointer hover:text-gray-900"/>
