@@ -10,7 +10,7 @@ dotenv.config();
 connectToDb();
 
 const app = express(); 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 // for form data
