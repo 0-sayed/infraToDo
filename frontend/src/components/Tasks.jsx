@@ -1,9 +1,10 @@
 import * as React from 'react';
 import axios from 'axios';
-import { useState, useEffect} from 'react';
+import { useState} from 'react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useMutation, useQuery, useQueryClient} from 'react-query';
+import { useMutation, useQuery} from 'react-query';
 import Loader from './Loader';
+
 const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 	const [tasks, setTasks] = React.useState([])
   const [hoveredItems, setHoveredItems] = useState({});
@@ -36,11 +37,12 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 			throw new Error(`Error updating task: ${error.message}`);
 		}
 	}
-	const { mutate:updateStatusMutation, isLoading:updateLoading, isError:updateError } = useMutation(updateTaskStatus, {
+	const { mutate:updateStatusMutation } = useMutation(updateTaskStatus, {
     onSuccess: () => {
 			setRefetch(!refetch);
     },
     onError: (err) => {
+			throw new Error(err);
     },
   });
   const handleChecked = (_id) => {
@@ -54,11 +56,12 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 			throw new Error(`Error deleting task: ${error.message}`);
 		}
 	}
-	const { mutate:deleteMutation, isLoading:deleteLoading, isError:deleteError } = useMutation(deleteTaskAPI, {
+	const { mutate:deleteMutation, isLoading:deleteLoading } = useMutation(deleteTaskAPI, {
     onSuccess: () => {
 			setRefetch(!refetch);
     },
     onError: (err) => {
+			throw new Error(err);
     },
   });
   const deleteTask = (id) => {
@@ -73,11 +76,12 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 			throw new Error(`Error fetching task: ${error.message}`);
 		}
 	}
-	const {isLoading, error} = useQuery(["tasks", refetch, formStateFlag], fetchingTasksAPI); //include criteria state to query key
+	const {isLoading:fetchingLoading, error:fetchingError} = useQuery(["tasks", refetch, formStateFlag], fetchingTasksAPI); //include criteria state to query key
 
   return (
     <ul className="divide-y divide-gray-100 mt-3">
       {
+				fetchingLoading ? <Loader/> : fetchingError ? <p className='error-message bg-red-500 text-white px-4 py-3 rounded-md flex items-center justify-center'>error while fetching</p> :
 				tasks.length === 0 ? <div class="flex justify-center gap-x-6 py-5 bg-gray-100 text-gray-500 text-center text-xl font-bold rounded-md">Kick start your day & add some tasks</div> :
 				tasks.map((task) => (
 					<li 
@@ -129,6 +133,7 @@ const Tasks = ({formStateFlag, editData, fillEditFlag, toggleForm})=>{
 						}
 					</li>
 				))}
+				
     </ul>
   )
 }

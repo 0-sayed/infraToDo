@@ -18,8 +18,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 	}
   const cancelButtonRef = useRef(null)
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, handleSubmit,  formState: { errors } } = useForm();
   const [error, setError] = useState(null);
 
 	async function postTaskAPI(data) {
@@ -30,11 +29,12 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 			throw new Error(`Error submitting task: ${error.message}`);
 		}
 	}
-	const { mutate:postTaskMutation, isLoading:postLoading, isError:postError } = useMutation(postTaskAPI, {
+	const { mutate:postTaskMutation, isLoading:postLoading } = useMutation(postTaskAPI, {
     onSuccess: () => {
 			toggleForm(); 	
     },
     onError: (err) => {
+			throw new Error(err);
     },
   });
 
@@ -46,18 +46,18 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 			throw new Error(`Error updating post: ${error.message}`);
 		}
 	}
-	const { mutate:updateTaskMutation, isLoading:updateLoading, isError:updateError } = useMutation(updateTaskAPI, {
+	const { mutate:updateTaskMutation, isLoading:updateLoading } = useMutation(updateTaskAPI, {
     onSuccess: () => {
 			toggleForm(); 	
     },
     onError: (err) => {
+			throw new Error(err);
     },
   });
 
   const onSubmit = (data) => {
 		try {
-			setIsLoading(true);
-      setError(null);
+			// setIsLoading(true);
 			if(Object.getOwnPropertyNames(editData).length !== 0){
 				const {_id} = editData
 				updateTaskMutation({_id, ...data});
@@ -66,11 +66,8 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 				postTaskMutation(data) 
 	
     } catch (error) {
-      console.error('Error submitting :', error);
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+      setError(error?.message || "Something Went Wrong!!");
+    } 
   };
 
   return (
@@ -119,7 +116,8 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 															{...register("tittle", { required: true })}
 															defaultValue={tittle}
 															className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-														/>
+															/>
+															{errors.tittle && <p className='mt-2 text-red-500 text-sm font-medium inline-block'>tittle is required</p>}
 													</div>
 												</div>
 
@@ -198,7 +196,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 											{updateLoading||postLoading ? <Loader /> : 'Done!'}
 										</button>
 									</div>
-									{error && <p className="error-message">{error}</p>}
+									{error && <p className="mt-2 text-red-500 text-sm font-medium flex justify-center pb-5">{error}</p>}
 								</form>
 
               </Dialog.Panel>
