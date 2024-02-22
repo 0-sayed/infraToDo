@@ -4,14 +4,17 @@ import FormDialog from "../components/FormDialog.jsx";
 import { useState,} from "react";
 
 const HomePage = () => {
-	const [formState, setFormState] = useState(false);
-	const toggleForm  = ()=>{
-		setFormState(!formState)
-	}
-
+	
 	const [editData, setEditData] = useState({});
 	const fillEditFlag  = (data)=>{
 		setEditData(data)
+	}
+
+	const [formState, setFormState] = useState(false);
+	const toggleForm  = ()=>{
+		if(formState)
+			setEditData({});
+		setFormState(!formState);
 	}
 	
   return (

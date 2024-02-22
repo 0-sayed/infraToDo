@@ -63,7 +63,7 @@ const Tasks = ({fillEditFlag, toggleForm})=>{
   }, [tasks])
 
   return (
-    <ul className="divide-y divide-gray-100">
+    <ul className="divide-y divide-gray-100 mt-3">
       {tasks.map((task) => (
         <li 
 					key={task._id}
@@ -81,19 +81,31 @@ const Tasks = ({fillEditFlag, toggleForm})=>{
 						<div className="min-w-0 flex-auto">
 							<p className="text-lg font-semibold leading-6 text-gray-1000">{task.tittle}</p>
 							<p className="mt-1 truncate text-sm leading-5 text-gray-800">{task.description}</p>
-							<p className="inline mr-2 truncate text-xs leading-5 text-gray-500">{task.priority && `Priority : ${task.priority}`}</p>
-							<p className="inline mr-2truncate text-xs leading-5 text-gray-500">{task.dueTo && `DueTo : ${task.dueTo}`}</p>
+							<p className={`inline mr-2 truncate text-xs leading-5 ${
+								task.priority === 1 ? 'text-green-500' :
+								task.priority === 2 ? 'text-yellow-500' :
+								task.priority === 3 ? 'text-red-500' : 'text-gray-500'
+							}`}>
+								{task.priority && (
+									<> 
+										{task.priority === 1 ? ' High' :
+										task.priority === 2 ? ' Medium' :
+										task.priority === 3 ? ' Low' : ''}
+									</>
+								)}
+							</p>
+							<p className="inline mr-2truncate text-xs leading-5 text-gray-500">{task.dueTo && `${task.dueTo?.split('T')[0]}`}</p>
 						</div>
 					</div>
 					{
 						hoveredItems[task._id]  && (
-							<div class="hidden shrink-0 sm:flex sm:flex-row sm:items-end ">
+							<div class="hidden shrink-0 sm:flex sm:flex-row sm:items-center ">
 								<PencilSquareIcon 
 									onClick={()=>toggleFormWithData(task)}
 									className="h-6 w-6 mr-2 text-gray-500  cursor-pointer hover:text-gray-900"/>
 								<TrashIcon 
 									onClick={() => deleteTask(task._id)}
-									className="h-6 w-6 text-gray-500 cursor-pointer hover:text-gray-900"/>
+									className="h-6 w-6 text-red-500 cursor-pointer hover:text-gray-900"/>
 							</div>
 						)
 					}

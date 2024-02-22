@@ -11,11 +11,11 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 	let priority = null;
   let dueTo = new Date().toISOString().split('T')[0];
 	if(Object.getOwnPropertyNames(editData).length !== 0){
+			console.log(editData)
 			tittle = editData.tittle;
 			description = editData.description;
 			priority = editData.priority;
 			dueTo = editData.dueTo;
-
 	}
   const cancelButtonRef = useRef(null)
 
@@ -52,6 +52,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 	}, {
     onSuccess: () => {
       setError(null);
+			reset();
 			toggleForm();
     },
     onError: (err) => {
@@ -63,7 +64,6 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 	
 		try {
 			setIsLoading(true);
-
 			mutate(data)
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -75,7 +75,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
   };
 
   return (
-    <Transition.Root show={formStateFlag} as={Fragment} onClose={toggleForm}>
+    <Transition.Root show={formStateFlag} as={Fragment} onClose={()=>{editData = {};toggleForm()}}>
       <Dialog as="div"  className="relative z-10 " initialFocus={cancelButtonRef} >
         <Transition.Child
           as={Fragment}
@@ -117,7 +117,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 															name="tittle"
 															id="tittle"
 															autoComplete="given-name"
-															{...register("tittle")}
+															{...register("tittle", { required: true })}
 															defaultValue={tittle}
 															className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 														/>
@@ -153,6 +153,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 															autoComplete="given-name"
 															{...register("dueTo")}
 															defaultValue={dueTo}
+															min={new Date().toISOString().split('T')[0]} 
 															className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 														/>
 													</div>
@@ -186,7 +187,7 @@ const FormDialog = ({editData, formStateFlag, toggleForm})=>{
 										<button
 											type="button"
 											className="flex justify-center items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600"
-											onClick={toggleForm}
+											onClick={()=>{editData={};toggleForm();}}
 											ref={cancelButtonRef}
 										>
 											Cancel
